@@ -59,33 +59,287 @@
 static void lv_tick_task(void *arg);
 static void guiTask(void *pvParameter);
 static void create_demo_application(void);
-void setup_scr_screen(lv_ui *ui)
-{
+// void setup_scr_screen(lv_ui *ui)
+// {
 
-    lv_style_t main_bgColor;
+//     lv_style_t main_bgColor;
 
 
-    // Write codes screen
-     ui->screen = lv_obj_create(NULL, NULL);
+//     // Write codes screen
+//      ui->screen = lv_obj_create(NULL, NULL);
 
-     // Write codes screen_img_1
-     ui->screen_img_1 = lv_img_create(ui->screen, NULL);
+//      // Write codes screen_img_1
+//      ui->screen_img_1 = lv_img_create(ui->screen, NULL);
 
-     // Write style LV_IMG_PART_MAIN for screen_img_1
-     static lv_style_t style_screen_img_1_main;
-     lv_style_reset(&style_screen_img_1_main);
+//      // Write style LV_IMG_PART_MAIN for screen_img_1
+//      static lv_style_t style_screen_img_1_main;
+//      lv_style_reset(&style_screen_img_1_main);
 
-    //Write style state: LV_STATE_DEFAULT for style_screen_img_1_main
-    lv_style_set_image_recolor(&style_screen_img_1_main, LV_STATE_DEFAULT, lv_color_make(0xff, 0xff, 0xff));
-    lv_style_set_image_recolor_opa(&style_screen_img_1_main, LV_STATE_DEFAULT, 0);
-    lv_style_set_image_opa(&style_screen_img_1_main, LV_STATE_DEFAULT, 255);
-    lv_obj_add_style(ui->screen_img_1, LV_IMG_PART_MAIN, &style_screen_img_1_main);
-    lv_obj_set_pos(ui->screen_img_1, 8, 8);
-    lv_obj_set_size(ui->screen_img_1, 240, 240);
-    lv_obj_set_click(ui->screen_img_1, true);
-    lv_img_set_src(ui->screen_img_1, &_mini_board_alpha_223x223);
-    lv_img_set_pivot(ui->screen_img_1, 0, 0);
-    lv_img_set_angle(ui->screen_img_1, 0);
+//     //Write style state: LV_STATE_DEFAULT for style_screen_img_1_main
+//     lv_style_set_image_recolor(&style_screen_img_1_main, LV_STATE_DEFAULT, lv_color_make(0xff, 0xff, 0xff));
+//     lv_style_set_image_recolor_opa(&style_screen_img_1_main, LV_STATE_DEFAULT, 0);
+//     lv_style_set_image_opa(&style_screen_img_1_main, LV_STATE_DEFAULT, 255);
+//     lv_obj_add_style(ui->screen_img_1, LV_IMG_PART_MAIN, &style_screen_img_1_main);
+//     lv_obj_set_pos(ui->screen_img_1, 8, 8);
+//     lv_obj_set_size(ui->screen_img_1, 240, 240);
+//     lv_obj_set_click(ui->screen_img_1, true);
+//     lv_img_set_src(ui->screen_img_1, &_mini_board_alpha_223x223);
+//     lv_img_set_pivot(ui->screen_img_1, 0, 0);
+//     lv_img_set_angle(ui->screen_img_1, 0);
+// }
+
+void setup_scr_screen(lv_ui *ui){
+
+	//Write codes screen
+	ui->screen = lv_obj_create(NULL, NULL);
+
+	//Write codes screen_canvas_1
+	ui->screen_canvas_1 = lv_canvas_create(ui->screen, NULL);
+
+	//Write style LV_CANVAS_PART_MAIN for screen_canvas_1
+	static lv_style_t style_screen_canvas_1_main;
+	lv_style_reset(&style_screen_canvas_1_main);
+
+	//Write style state: LV_STATE_DEFAULT for style_screen_canvas_1_main
+	lv_style_set_image_recolor(&style_screen_canvas_1_main, LV_STATE_DEFAULT, lv_color_make(0xfc, 0xfc, 0xfc));
+	lv_style_set_image_recolor_opa(&style_screen_canvas_1_main, LV_STATE_DEFAULT, 255);
+	lv_obj_add_style(ui->screen_canvas_1, LV_CANVAS_PART_MAIN, &style_screen_canvas_1_main);
+	lv_obj_set_pos(ui->screen_canvas_1, 0, 0);
+	lv_obj_set_size(ui->screen_canvas_1, 240, 240);
+	lv_color_t *buf_screen_canvas_1 = (lv_color_t*)lv_mem_alloc(240*240*4);
+	lv_canvas_set_buffer(ui->screen_canvas_1, buf_screen_canvas_1, 240, 240, LV_IMG_CF_TRUE_COLOR);
+
+	//Write codes screen_time_label
+	ui->screen_time_label = lv_label_create(ui->screen, NULL);
+	lv_label_set_text(ui->screen_time_label, "12:45");
+	lv_label_set_long_mode(ui->screen_time_label, LV_LABEL_LONG_BREAK);
+	lv_label_set_align(ui->screen_time_label, LV_LABEL_ALIGN_CENTER);
+
+	//Write style LV_LABEL_PART_MAIN for screen_time_label
+	static lv_style_t style_screen_time_label_main;
+	lv_style_reset(&style_screen_time_label_main);
+
+	//Write style state: LV_STATE_DEFAULT for style_screen_time_label_main
+	lv_style_set_radius(&style_screen_time_label_main, LV_STATE_DEFAULT, 0);
+	lv_style_set_bg_color(&style_screen_time_label_main, LV_STATE_DEFAULT, lv_color_make(0xff, 0xff, 0xff));
+	lv_style_set_bg_grad_color(&style_screen_time_label_main, LV_STATE_DEFAULT, lv_color_make(0xfc, 0xfc, 0xfc));
+	lv_style_set_bg_grad_dir(&style_screen_time_label_main, LV_STATE_DEFAULT, LV_GRAD_DIR_VER);
+	lv_style_set_bg_opa(&style_screen_time_label_main, LV_STATE_DEFAULT, 255);
+	lv_style_set_text_color(&style_screen_time_label_main, LV_STATE_DEFAULT, lv_color_make(0xee, 0x9c, 0x3f));
+	lv_style_set_text_font(&style_screen_time_label_main, LV_STATE_DEFAULT, &lv_font_montserratMedium_29);
+	lv_style_set_text_letter_space(&style_screen_time_label_main, LV_STATE_DEFAULT, 2);
+	lv_style_set_pad_left(&style_screen_time_label_main, LV_STATE_DEFAULT, 0);
+	lv_style_set_pad_right(&style_screen_time_label_main, LV_STATE_DEFAULT, 0);
+	lv_style_set_pad_top(&style_screen_time_label_main, LV_STATE_DEFAULT, 0);
+	lv_style_set_pad_bottom(&style_screen_time_label_main, LV_STATE_DEFAULT, 0);
+	lv_obj_add_style(ui->screen_time_label, LV_LABEL_PART_MAIN, &style_screen_time_label_main);
+	lv_obj_set_pos(ui->screen_time_label, 13, 40);
+	lv_obj_set_size(ui->screen_time_label, 90, 0);
+
+	//Write codes screen_whether_img
+	ui->screen_whether_img = lv_img_create(ui->screen, NULL);
+
+	//Write style LV_IMG_PART_MAIN for screen_whether_img
+	static lv_style_t style_screen_whether_img_main;
+	lv_style_reset(&style_screen_whether_img_main);
+
+	//Write style state: LV_STATE_DEFAULT for style_screen_whether_img_main
+	lv_style_set_image_recolor(&style_screen_whether_img_main, LV_STATE_DEFAULT, lv_color_make(0xdc, 0xdc, 0xdc));
+	lv_style_set_image_recolor_opa(&style_screen_whether_img_main, LV_STATE_DEFAULT, 0);
+	lv_style_set_image_opa(&style_screen_whether_img_main, LV_STATE_DEFAULT, 255);
+	lv_obj_add_style(ui->screen_whether_img, LV_IMG_PART_MAIN, &style_screen_whether_img_main);
+	lv_obj_set_pos(ui->screen_whether_img, 139, 19);
+	lv_obj_set_size(ui->screen_whether_img, 89, 88);
+	lv_obj_set_click(ui->screen_whether_img, true);
+	lv_img_set_src(ui->screen_whether_img,&_cloud2_alpha_89x88);
+	lv_img_set_pivot(ui->screen_whether_img, 0,0);
+	lv_img_set_angle(ui->screen_whether_img, 0);
+
+	//Write codes screen_temp_img
+	ui->screen_temp_img = lv_img_create(ui->screen, NULL);
+
+	//Write style LV_IMG_PART_MAIN for screen_temp_img
+	static lv_style_t style_screen_temp_img_main;
+	lv_style_reset(&style_screen_temp_img_main);
+
+	//Write style state: LV_STATE_DEFAULT for style_screen_temp_img_main
+	lv_style_set_image_recolor(&style_screen_temp_img_main, LV_STATE_DEFAULT, lv_color_make(0xff, 0xff, 0xff));
+	lv_style_set_image_recolor_opa(&style_screen_temp_img_main, LV_STATE_DEFAULT, 0);
+	lv_style_set_image_opa(&style_screen_temp_img_main, LV_STATE_DEFAULT, 255);
+	lv_obj_add_style(ui->screen_temp_img, LV_IMG_PART_MAIN, &style_screen_temp_img_main);
+	lv_obj_set_pos(ui->screen_temp_img, 5, 113);
+	lv_obj_set_size(ui->screen_temp_img, 48, 55);
+	lv_obj_set_click(ui->screen_temp_img, true);
+	lv_img_set_src(ui->screen_temp_img,&_Pm3XE4eMqr_jpg_alpha_48x55);
+	lv_img_set_pivot(ui->screen_temp_img, 0,0);
+	lv_img_set_angle(ui->screen_temp_img, 0);
+
+	//Write codes screen_city_label
+	ui->screen_city_label = lv_label_create(ui->screen, NULL);
+	//v_label_set_text(ui->screen_city_label, "北京多云");
+    lv_label_set_text(ui->screen_city_label, "cloudy");
+	lv_label_set_long_mode(ui->screen_city_label, LV_LABEL_LONG_BREAK);
+	lv_label_set_align(ui->screen_city_label, LV_LABEL_ALIGN_CENTER);
+
+	//Write style LV_LABEL_PART_MAIN for screen_city_label
+	static lv_style_t style_screen_city_label_main;
+	lv_style_reset(&style_screen_city_label_main);
+
+	//Write style state: LV_STATE_DEFAULT for style_screen_city_label_main
+	lv_style_set_radius(&style_screen_city_label_main, LV_STATE_DEFAULT, 0);
+	lv_style_set_bg_color(&style_screen_city_label_main, LV_STATE_DEFAULT, lv_color_make(0xff, 0xff, 0xff));
+	lv_style_set_bg_grad_color(&style_screen_city_label_main, LV_STATE_DEFAULT, lv_color_make(0xff, 0xff, 0xff));
+	lv_style_set_bg_grad_dir(&style_screen_city_label_main, LV_STATE_DEFAULT, LV_GRAD_DIR_VER);
+	lv_style_set_bg_opa(&style_screen_city_label_main, LV_STATE_DEFAULT, 255);
+	lv_style_set_text_color(&style_screen_city_label_main, LV_STATE_DEFAULT, lv_color_make(0x00, 0x00, 0x00));
+	lv_style_set_text_font(&style_screen_city_label_main, LV_STATE_DEFAULT, &lv_font_simsun_19);
+	lv_style_set_text_letter_space(&style_screen_city_label_main, LV_STATE_DEFAULT, 2);
+	lv_style_set_pad_left(&style_screen_city_label_main, LV_STATE_DEFAULT, 0);
+	lv_style_set_pad_right(&style_screen_city_label_main, LV_STATE_DEFAULT, 0);
+	lv_style_set_pad_top(&style_screen_city_label_main, LV_STATE_DEFAULT, 0);
+	lv_style_set_pad_bottom(&style_screen_city_label_main, LV_STATE_DEFAULT, 0);
+	lv_obj_add_style(ui->screen_city_label, LV_LABEL_PART_MAIN, &style_screen_city_label_main);
+	lv_obj_set_pos(ui->screen_city_label, 134, 88);
+	lv_obj_set_size(ui->screen_city_label, 100, 0);
+
+	//Write codes screen_hum_img
+	ui->screen_hum_img = lv_img_create(ui->screen, NULL);
+
+	//Write style LV_IMG_PART_MAIN for screen_hum_img
+	static lv_style_t style_screen_hum_img_main;
+	lv_style_reset(&style_screen_hum_img_main);
+
+	//Write style state: LV_STATE_DEFAULT for style_screen_hum_img_main
+	lv_style_set_image_recolor(&style_screen_hum_img_main, LV_STATE_DEFAULT, lv_color_make(0xff, 0xff, 0xff));
+	lv_style_set_image_recolor_opa(&style_screen_hum_img_main, LV_STATE_DEFAULT, 0);
+	lv_style_set_image_opa(&style_screen_hum_img_main, LV_STATE_DEFAULT, 255);
+	lv_obj_add_style(ui->screen_hum_img, LV_IMG_PART_MAIN, &style_screen_hum_img_main);
+	lv_obj_set_pos(ui->screen_hum_img, 4, 175);
+	lv_obj_set_size(ui->screen_hum_img, 40, 55);
+	lv_obj_set_click(ui->screen_hum_img, true);
+	lv_img_set_src(ui->screen_hum_img,&_shidu_jpg_alpha_40x55);
+	lv_img_set_pivot(ui->screen_hum_img, 0,0);
+	lv_img_set_angle(ui->screen_hum_img, 0);
+
+	//Write codes screen_temp_bar
+	ui->screen_temp_bar = lv_bar_create(ui->screen, NULL);
+
+	//Write style LV_BAR_PART_BG for screen_temp_bar
+	static lv_style_t style_screen_temp_bar_bg;
+	lv_style_reset(&style_screen_temp_bar_bg);
+
+	//Write style state: LV_STATE_DEFAULT for style_screen_temp_bar_bg
+	lv_style_set_radius(&style_screen_temp_bar_bg, LV_STATE_DEFAULT, 10);
+	lv_style_set_bg_color(&style_screen_temp_bar_bg, LV_STATE_DEFAULT, lv_color_make(0xd4, 0xd7, 0xd9));
+	lv_style_set_bg_grad_color(&style_screen_temp_bar_bg, LV_STATE_DEFAULT, lv_color_make(0xd4, 0xd7, 0xd9));
+	lv_style_set_bg_grad_dir(&style_screen_temp_bar_bg, LV_STATE_DEFAULT, LV_GRAD_DIR_VER);
+	lv_style_set_bg_opa(&style_screen_temp_bar_bg, LV_STATE_DEFAULT, 255);
+	lv_style_set_pad_left(&style_screen_temp_bar_bg, LV_STATE_DEFAULT, 0);
+	lv_style_set_pad_right(&style_screen_temp_bar_bg, LV_STATE_DEFAULT, 0);
+	lv_style_set_pad_top(&style_screen_temp_bar_bg, LV_STATE_DEFAULT, 0);
+	lv_style_set_pad_bottom(&style_screen_temp_bar_bg, LV_STATE_DEFAULT, 0);
+	lv_obj_add_style(ui->screen_temp_bar, LV_BAR_PART_BG, &style_screen_temp_bar_bg);
+
+	//Write style LV_BAR_PART_INDIC for screen_temp_bar
+	static lv_style_t style_screen_temp_bar_indic;
+	lv_style_reset(&style_screen_temp_bar_indic);
+
+	//Write style state: LV_STATE_DEFAULT for style_screen_temp_bar_indic
+	lv_style_set_radius(&style_screen_temp_bar_indic, LV_STATE_DEFAULT, 10);
+	lv_style_set_bg_color(&style_screen_temp_bar_indic, LV_STATE_DEFAULT, lv_color_make(0x01, 0xa2, 0xb1));
+	lv_style_set_bg_grad_color(&style_screen_temp_bar_indic, LV_STATE_DEFAULT, lv_color_make(0x01, 0xa2, 0xb1));
+	lv_style_set_bg_grad_dir(&style_screen_temp_bar_indic, LV_STATE_DEFAULT, LV_GRAD_DIR_VER);
+	lv_style_set_bg_opa(&style_screen_temp_bar_indic, LV_STATE_DEFAULT, 255);
+	lv_obj_add_style(ui->screen_temp_bar, LV_BAR_PART_INDIC, &style_screen_temp_bar_indic);
+	lv_obj_set_pos(ui->screen_temp_bar, 53, 137);
+	lv_obj_set_size(ui->screen_temp_bar, 64, 11);
+	lv_bar_set_anim_time(ui->screen_temp_bar,1000);
+	lv_bar_set_value(ui->screen_temp_bar,50,LV_ANIM_OFF);
+	lv_bar_set_range(ui->screen_temp_bar,0,100);
+
+	//Write codes screen_date_label
+	ui->screen_date_label = lv_label_create(ui->screen, NULL);
+	// lv_label_set_text(ui->screen_date_label, "星期四 6/30");
+    lv_label_set_text(ui->screen_date_label, "Thur 6/30");
+
+	lv_label_set_long_mode(ui->screen_date_label, LV_LABEL_LONG_BREAK);
+	lv_label_set_align(ui->screen_date_label, LV_LABEL_ALIGN_CENTER);
+
+	//Write style LV_LABEL_PART_MAIN for screen_date_label
+	static lv_style_t style_screen_date_label_main;
+	lv_style_reset(&style_screen_date_label_main);
+
+	//Write style state: LV_STATE_DEFAULT for style_screen_date_label_main
+	lv_style_set_radius(&style_screen_date_label_main, LV_STATE_DEFAULT, 0);
+	lv_style_set_bg_color(&style_screen_date_label_main, LV_STATE_DEFAULT, lv_color_make(0xff, 0xff, 0xff));
+	lv_style_set_bg_grad_color(&style_screen_date_label_main, LV_STATE_DEFAULT, lv_color_make(0xfc, 0xfc, 0xfc));
+	lv_style_set_bg_grad_dir(&style_screen_date_label_main, LV_STATE_DEFAULT, LV_GRAD_DIR_VER);
+	lv_style_set_bg_opa(&style_screen_date_label_main, LV_STATE_DEFAULT, 255);
+	lv_style_set_text_color(&style_screen_date_label_main, LV_STATE_DEFAULT, lv_color_make(0xee, 0x9c, 0x3f));
+	lv_style_set_text_font(&style_screen_date_label_main, LV_STATE_DEFAULT, &lv_font_montserratMedium_13);
+	lv_style_set_text_letter_space(&style_screen_date_label_main, LV_STATE_DEFAULT, 2);
+	lv_style_set_pad_left(&style_screen_date_label_main, LV_STATE_DEFAULT, 0);
+	lv_style_set_pad_right(&style_screen_date_label_main, LV_STATE_DEFAULT, 0);
+	lv_style_set_pad_top(&style_screen_date_label_main, LV_STATE_DEFAULT, 0);
+	lv_style_set_pad_bottom(&style_screen_date_label_main, LV_STATE_DEFAULT, 0);
+	lv_obj_add_style(ui->screen_date_label, LV_LABEL_PART_MAIN, &style_screen_date_label_main);
+	lv_obj_set_pos(ui->screen_date_label, 18, 76);
+	lv_obj_set_size(ui->screen_date_label, 90, 0);
+
+	//Write codes screen_hum_bar
+	ui->screen_hum_bar = lv_bar_create(ui->screen, NULL);
+
+	//Write style LV_BAR_PART_BG for screen_hum_bar
+	static lv_style_t style_screen_hum_bar_bg;
+	lv_style_reset(&style_screen_hum_bar_bg);
+
+	//Write style state: LV_STATE_DEFAULT for style_screen_hum_bar_bg
+	lv_style_set_radius(&style_screen_hum_bar_bg, LV_STATE_DEFAULT, 10);
+	lv_style_set_bg_color(&style_screen_hum_bar_bg, LV_STATE_DEFAULT, lv_color_make(0xd4, 0xd7, 0xd9));
+	lv_style_set_bg_grad_color(&style_screen_hum_bar_bg, LV_STATE_DEFAULT, lv_color_make(0xd4, 0xd7, 0xd9));
+	lv_style_set_bg_grad_dir(&style_screen_hum_bar_bg, LV_STATE_DEFAULT, LV_GRAD_DIR_VER);
+	lv_style_set_bg_opa(&style_screen_hum_bar_bg, LV_STATE_DEFAULT, 255);
+	lv_style_set_pad_left(&style_screen_hum_bar_bg, LV_STATE_DEFAULT, 0);
+	lv_style_set_pad_right(&style_screen_hum_bar_bg, LV_STATE_DEFAULT, 0);
+	lv_style_set_pad_top(&style_screen_hum_bar_bg, LV_STATE_DEFAULT, 0);
+	lv_style_set_pad_bottom(&style_screen_hum_bar_bg, LV_STATE_DEFAULT, 0);
+	lv_obj_add_style(ui->screen_hum_bar, LV_BAR_PART_BG, &style_screen_hum_bar_bg);
+
+	//Write style LV_BAR_PART_INDIC for screen_hum_bar
+	static lv_style_t style_screen_hum_bar_indic;
+	lv_style_reset(&style_screen_hum_bar_indic);
+
+	//Write style state: LV_STATE_DEFAULT for style_screen_hum_bar_indic
+	lv_style_set_radius(&style_screen_hum_bar_indic, LV_STATE_DEFAULT, 10);
+	lv_style_set_bg_color(&style_screen_hum_bar_indic, LV_STATE_DEFAULT, lv_color_make(0x01, 0xa2, 0xb1));
+	lv_style_set_bg_grad_color(&style_screen_hum_bar_indic, LV_STATE_DEFAULT, lv_color_make(0x01, 0xa2, 0xb1));
+	lv_style_set_bg_grad_dir(&style_screen_hum_bar_indic, LV_STATE_DEFAULT, LV_GRAD_DIR_VER);
+	lv_style_set_bg_opa(&style_screen_hum_bar_indic, LV_STATE_DEFAULT, 255);
+	lv_obj_add_style(ui->screen_hum_bar, LV_BAR_PART_INDIC, &style_screen_hum_bar_indic);
+	lv_obj_set_pos(ui->screen_hum_bar, 55, 196);
+	lv_obj_set_size(ui->screen_hum_bar, 61, 12);
+	lv_bar_set_anim_time(ui->screen_hum_bar,1000);
+	lv_bar_set_value(ui->screen_hum_bar,50,LV_ANIM_OFF);
+	lv_bar_set_range(ui->screen_hum_bar,0,100);
+
+	//Write codes screen_logo_img
+	ui->screen_logo_img = lv_img_create(ui->screen, NULL);
+
+	//Write style LV_IMG_PART_MAIN for screen_logo_img
+	static lv_style_t style_screen_logo_img_main;
+	lv_style_reset(&style_screen_logo_img_main);
+
+	//Write style state: LV_STATE_DEFAULT for style_screen_logo_img_main
+	lv_style_set_image_recolor(&style_screen_logo_img_main, LV_STATE_DEFAULT, lv_color_make(0xff, 0xff, 0xff));
+	lv_style_set_image_recolor_opa(&style_screen_logo_img_main, LV_STATE_DEFAULT, 0);
+	lv_style_set_image_opa(&style_screen_logo_img_main, LV_STATE_DEFAULT, 255);
+	lv_obj_add_style(ui->screen_logo_img, LV_IMG_PART_MAIN, &style_screen_logo_img_main);
+	lv_obj_set_pos(ui->screen_logo_img, 132, 130);
+	lv_obj_set_size(ui->screen_logo_img, 100, 100);
+	lv_obj_set_click(ui->screen_logo_img, true);
+	lv_img_set_src(ui->screen_logo_img,&_dabai_alpha_100x100);
+	lv_img_set_pivot(ui->screen_logo_img, 0,0);
+	lv_img_set_angle(ui->screen_logo_img, 0);
 }
 void Home_Page_Create(void)
 {
@@ -196,7 +450,7 @@ static void guiTask(void *pvParameter)
 
     //Home_Page_Create();
 
-    lv_split_jpeg_init();
+    //lv_split_jpeg_init();
     setup_ui(&guider_ui);
     events_init(&guider_ui);
 
