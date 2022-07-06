@@ -51,7 +51,7 @@
 
 #define WEB_SERVER "api.seniverse.com"
 #define WEB_PORT "443"
-#define WEB_URL "https://api.seniverse.com/v3/weather/daily.json?key=SYahiZcoJ587MEA3R&location=beijing&language=zh-Hans&unit=c&start=0&days=1"
+#define WEB_URL "https://api.seniverse.com/v3/weather/now.json?key=SYahiZcoJ587MEA3R&location=shanghai&language=zh-Hans&unit=c&start=0&days=1"
 
 static const char *TAG = "example";
 
@@ -107,7 +107,7 @@ esp_err_t cjson_weather(char *text)
                             printf("cJSON_GetObjectItem: type=%d, string is %s,valuestring=%s\n", item->type, item->string, item->valuestring);
                             memcpy(results[0].location.name, item->valuestring, strlen(item->valuestring));
 
-                            if(0==strcmp(results[0].location.name,"北京"))
+                            if (0 == strcmp(results[0].location.name, "北京"))
                             {
                                 printf("\r\n city is beijing\r\n");
                             }
@@ -133,7 +133,8 @@ esp_err_t cjson_weather(char *text)
                             memcpy(results[0].location.timezone_offset, item->valuestring, strlen(item->valuestring));
                         }
                     }
-                    /* 匹配子对象2 */
+
+                    /* 匹配子对象2*/
                     if ((subobject = cJSON_GetObjectItem(object, "now")) != NULL)
                     {
                         printf("---------------------------------subobject2-------------------------------\n");
@@ -142,12 +143,18 @@ esp_err_t cjson_weather(char *text)
                             printf("cJSON_GetObjectItem: type=%d, string is %s,valuestring=%s\n", item->type, item->string, item->valuestring);
                             memcpy(results[0].now.text, item->valuestring, strlen(item->valuestring));
                         }
-                        if ((item = cJSON_GetObjectItem(subobject, "code")) != NULL) //匹配子对象2成员"code"
-                        {
-                            printf("cJSON_GetObjectItem: type=%d, string is %s,valuestring=%s\n", item->type, item->string, item->valuestring);
-                            memcpy(results[0].now.code, item->valuestring, strlen(item->valuestring));
-                        }
-                        if ((item = cJSON_GetObjectItem(subobject, "temperature")) != NULL) //匹配子对象2成员"temperature"
+                        // if ((item = cJSON_GetObjectItem(subobject, "wind_direction")) != NULL) //匹配子对象2成员"wind_direction"
+                        // {
+                        //     printf("cJSON_GetObjectItem: type=%d, string is %s,valuestring=%s\n", item->type, item->string, item->valuestring);
+                        //     memcpy(results[0].now.text, item->valuestring, strlen(item->valuestring));
+                        // }
+
+                        // if ((item = cJSON_GetObjectItem(subobject, "wind_scale")) != NULL) //匹配子对象2成员"wind_scale"
+                        // {
+                        //     printf("cJSON_GetObjectItem: type=%d, string is %s,valuestring=%s\n", item->type, item->string, item->valuestring);
+                        //     memcpy(results[0].now.code, item->valuestring, strlen(item->valuestring));
+                        // }
+                        if ((item = cJSON_GetObjectItem(subobject, "temperature")) != NULL) //匹配子对象2成员"humidity"
                         {
                             printf("cJSON_GetObjectItem: type=%d, string is %s,valuestring=%s\n", item->type, item->string, item->valuestring);
                             memcpy(results[0].now.temperature, item->valuestring, strlen(item->valuestring));

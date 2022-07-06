@@ -138,7 +138,7 @@ void time_date_update(int hour, int min, int sec, int mon, int monday, int weekd
 
     sprintf(str, "%02d%s%02d%s%02d", hour, ":", min, ":", sec);
     lv_label_set_text(time_label, str);
-    lv_obj_set_pos(time_label, 30, time_label_y);
+    lv_obj_set_pos(time_label, 10, time_label_y);
     //时间分钟显示    //数据格式转换
     // numtostring_convert(min, str);
     // lv_label_set_text(time_min_label, str);
@@ -167,7 +167,8 @@ void whether_img(const void *img_src, uint8_t pos_x, uint8_t pos_y)
     lv_img_set_src(img1, img_src);
     lv_obj_set_pos(img1, pos_x, pos_y);
 }
-
+lv_obj_t *temperature_label;
+lv_obj_t *temperature_bar;
 void temperature_img(const void *img_src, uint8_t pos_x, uint8_t pos_y)
 {
     char str[100] = {0};
@@ -177,14 +178,13 @@ void temperature_img(const void *img_src, uint8_t pos_x, uint8_t pos_y)
     lv_img_set_src(img1, img_src);
     lv_obj_set_pos(img1, pos_x, pos_y);
 
-    lv_obj_t *temperature_bar = lv_bar_create(lv_scr_act(), NULL);
+    temperature_bar = lv_bar_create(lv_scr_act(), NULL);
     lv_obj_set_size(temperature_bar, 60, 10);
     lv_obj_set_pos(temperature_bar, 45, 170);
     lv_bar_set_anim_time(temperature_bar, 2000);
     lv_bar_set_range(temperature_bar, 0, 100);
     lv_bar_set_value(temperature_bar, 50, LV_ANIM_ON);
     //温度值
-    lv_obj_t *temperature_label;
     static lv_style_t font_style;
     lv_style_init(&font_style);
     lv_style_set_text_color(&font_style, LV_STATE_DEFAULT, LV_COLOR_ORANGE);
@@ -203,7 +203,8 @@ void temperature_img(const void *img_src, uint8_t pos_x, uint8_t pos_y)
     lv_label_set_text(temperaturesymbol_label, "℃");
     lv_obj_set_pos(temperaturesymbol_label, 135, 165);
 }
-
+lv_obj_t *humidity_label;
+lv_obj_t *humidity_bar;
 void humidity_img(const void *img_src, uint8_t pos_x, uint8_t pos_y)
 {
     lv_obj_t *img1 = lv_img_create(lv_scr_act(), NULL);
@@ -213,7 +214,7 @@ void humidity_img(const void *img_src, uint8_t pos_x, uint8_t pos_y)
     lv_obj_set_pos(img1, pos_x, pos_y);
 
     //进度条样式
-    lv_obj_t *humidity_bar = lv_bar_create(lv_scr_act(), NULL);
+    humidity_bar = lv_bar_create(lv_scr_act(), NULL);
     lv_obj_set_size(humidity_bar, 60, 10);
     lv_obj_set_pos(humidity_bar, 45, 210);
     lv_bar_set_anim_time(humidity_bar, 2000);
@@ -221,7 +222,6 @@ void humidity_img(const void *img_src, uint8_t pos_x, uint8_t pos_y)
     lv_bar_set_value(humidity_bar, 50, LV_ANIM_ON);
 
     //湿度值
-    lv_obj_t *humidity_label;
     static lv_style_t font_style;
     lv_style_init(&font_style);
     lv_style_set_text_color(&font_style, LV_STATE_DEFAULT, LV_COLOR_ORANGE);
@@ -265,15 +265,15 @@ void whether_message(void)
     lv_label_set_text(whethercity_label, "上海");
     lv_obj_set_pos(whethercity_label, 15, 10);
 
-    airquality_label = lv_label_create(src, NULL);
-    lv_obj_add_style(airquality_label, LV_LABEL_PART_MAIN, &font_style);
-    lv_label_set_text(airquality_label, "优");
-    lv_obj_set_pos(airquality_label, 100, 10);
-
     static lv_style_t font_style2;
     lv_style_init(&font_style2);
     lv_style_set_text_color(&font_style2, LV_STATE_DEFAULT, LV_COLOR_ORANGE);
     lv_style_set_text_font(&font_style2, LV_STATE_DEFAULT, &user_fonts_songti_15);
+
+    airquality_label = lv_label_create(src, NULL);
+    lv_obj_add_style(airquality_label, LV_LABEL_PART_MAIN, &font_style2);
+    lv_label_set_text(airquality_label, "晴");
+    lv_obj_set_pos(airquality_label, 100, 10);
 
     whether_label = lv_label_create(src, NULL);
     lv_obj_add_style(whether_label, LV_LABEL_PART_MAIN, &font_style2);
@@ -281,17 +281,44 @@ void whether_message(void)
     lv_obj_set_pos(whether_label, 15, 50);
 }
 
-void whether_message_update(char *city)
+void whether_message_update(char *city, char *temperature, char *humidity, char *whether)
 {
+    char str[20] = {0};
+    uint16_t temp = 0;
     lv_label_set_text(whethercity_label, city);
-    lv_obj_set_pos(whethercity_label, 15, 10);
+    lv_obj_set_pos(whethercity_label, 10, 10);
+
+    // sprintf(str,"%s%d%s",)
+    lv_label_set_text(whether_label, "西南风2级");
+    lv_obj_set_pos(whether_label, 15, 50);
+
+    //温度
+    temp = (temperature[0] - 0x30) * 10 + (temperature[1] - 0x30);
+    printf("\r\ntemperature is %d", temp);
+    lv_bar_set_value(temperature_bar, temp, LV_ANIM_ON);
+
+    strcat(temperature, "℃");
+    lv_label_set_text(temperature_label, temperature);
+    lv_obj_set_pos(temperature_label, 110, 165);
+
+    //天气
+    lv_label_set_text(airquality_label, whether);
+    lv_obj_set_pos(airquality_label, 90, 10);
+
+    // //湿度
+    // strcat(humidity, "%");
+    // lv_label_set_text(humidity_label, humidity);
+    // lv_obj_set_pos(humidity_label, 110, 205);
+    // temp = (humidity[0] - 0x30) * 10 + (humidity - 0x30);
+    // printf("\r\nhumidity is %d", temp);
+    // lv_bar_set_value(humidity_bar, temp, LV_ANIM_ON);
 }
 
 void Temper_Task_Function(lv_task_t *task)
 {
     //你的代码
     time_date_update(s_date_time.timeinfo_t.tm_hour, s_date_time.timeinfo_t.tm_min, s_date_time.timeinfo_t.tm_sec, s_date_time.timeinfo_t.tm_mon, s_date_time.timeinfo_t.tm_mday, s_date_time.timeinfo_t.tm_wday);
-    whether_message_update(results[0].location.name);
+    whether_message_update(results[0].location.name, results[0].now.temperature, results[0].now.temperature, results[0].now.text);
 }
 
 void lv_task_init()
@@ -304,7 +331,7 @@ void lvgl_gui_sample()
     Home_Page_Create();
     //默认显示，随便什么都可以
     time_label_disp(11, 53, 40, ":");
-    whether_img(&cloudy, 150, 5);
+    whether_img(&duoyun, 150, 5);
     temperature_img(&temperature, 10, 155);
     humidity_img(&humidity, 15, 190);
     logo_img(&dabai, 160, 130);
