@@ -35,7 +35,7 @@
 #include "lvgl_gui.h"
 
 #include "wifi.h"
-
+#include "https.h"
 #include "peripheral_init.h"
 
 #ifndef CONFIG_LV_TFT_DISPLAY_MONOCHROME
@@ -299,9 +299,9 @@ static void guiTask(void *pvParameter)
 
     //外设初始化
     lvgl_gui_sample();
+    https_sample();
 
     peripheral_init();
-
     /* Create the demo application */
     //   create_demo_application();
     while (1)

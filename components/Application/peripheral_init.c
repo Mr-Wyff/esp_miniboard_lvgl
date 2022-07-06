@@ -4,7 +4,7 @@
 
 void peripheral_init(void)
 {
-    wifi_connect();
+    //wifi_connect();
 
     xTaskCreate(&time_date_task, "time_date_task", 2048*5, NULL, 5, NULL);
 

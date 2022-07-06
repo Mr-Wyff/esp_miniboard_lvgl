@@ -25,6 +25,6 @@ void lvgl_gui_sample();
 void Home_Page_Create(void);
 void numtostring_convert(int16_t num,char *str);
 void time_label_disp(int hour, int min,int sec, const char *symbol);
-void update_time_date(int hour, int min, int sec, int mon,int monday,int weekday);
+void time_date_update(int hour, int min, int sec, int mon,int monday,int weekday);
 
 #endif

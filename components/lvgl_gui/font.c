@@ -35,7 +35,7 @@ void font_img(const void *img_src,uint8_t pos_x,uint8_t pos_y)
 
     temperature_label = lv_label_create(src, NULL);
     lv_obj_add_style(temperature_label, LV_LABEL_PART_MAIN, &font_style);
-    lv_label_set_text(temperature_label, "0123456789 :%℃月号周一二三四五六日");
+    lv_label_set_text(temperature_label, "0123456789 :%℃月号周一二三四五六日北京上海商丘优西南风2级");
     lv_obj_set_pos(temperature_label, 120, 165);
 
 }

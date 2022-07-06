@@ -1,6 +1,7 @@
 #include "lvgl_gui.h"
 #include "sntp_time.h"
 #include "lv_font.h"
+#include "https.h"
 extern S_DATE_TIME_T s_date_time;
 
 void numtostring_convert(int16_t num, char *str)
@@ -58,11 +59,9 @@ lv_obj_t *week_label;
 lv_obj_t *time_symbol_label;
 lv_obj_t *time_label;
 
-
 void time_label_disp(int hour, int min, int sec, const char *symbol)
 {
     char str[20] = {0};
-
     lv_obj_t *src = lv_scr_act();
     //文字样式
     static lv_style_t font_style;
@@ -70,11 +69,11 @@ void time_label_disp(int hour, int min, int sec, const char *symbol)
     lv_style_set_text_color(&font_style, LV_STATE_DEFAULT, LV_COLOR_ORANGE);
     lv_style_set_text_font(&font_style, LV_STATE_DEFAULT, &user_fonts_youyuan_25);
 
-   //时间标签
+    //时间标签
     time_label = lv_label_create(src, NULL);
     lv_obj_add_style(time_label, LV_LABEL_PART_MAIN, &font_style);
 
-    sprintf(str,"%02d%s%02d%s%02d",hour,":",min,":",sec);
+    sprintf(str, "%02d%s%02d%s%02d", hour, ":", min, ":", sec);
     lv_label_set_text(time_label, str);
     lv_obj_set_pos(time_label, 30, time_label_y);
     // //时间-小时标签
@@ -130,14 +129,14 @@ void time_label_disp(int hour, int min, int sec, const char *symbol)
     lv_obj_set_pos(week_label, 110, datelabel_y);
 }
 
-void update_time_date(int hour, int min, int sec, int mon, int monday, int weekday)
+void time_date_update(int hour, int min, int sec, int mon, int monday, int weekday)
 {
     char str[20] = {0};
     uint8_t str_len = 0;
     //时间小时显示-格式转换
-    //numtostring_convert(hour, str);
+    // numtostring_convert(hour, str);
 
-    sprintf(str,"%02d%s%02d%s%02d",hour,":",min,":",sec);
+    sprintf(str, "%02d%s%02d%s%02d", hour, ":", min, ":", sec);
     lv_label_set_text(time_label, str);
     lv_obj_set_pos(time_label, 30, time_label_y);
     //时间分钟显示    //数据格式转换
@@ -154,12 +153,12 @@ void update_time_date(int hour, int min, int sec, int mon, int monday, int weekd
 
     lv_label_set_text(date_label, str);
     lv_obj_set_pos(date_label, 15, datelabel_y);
-    //str_len = strlen(str);
+    str_len = strlen(str);
     //日期-星期标签
     const char *wday[] = {"日", "一", "二", "三", "四", "五", "六"};
     sprintf((char *)str, "周%s", wday[weekday]);
     lv_label_set_text(week_label, str);
-    lv_obj_set_pos(week_label, 110, datelabel_y);
+    lv_obj_set_pos(week_label, 10 + str_len * 10, datelabel_y);
 }
 
 void whether_img(const void *img_src, uint8_t pos_x, uint8_t pos_y)
@@ -171,7 +170,6 @@ void whether_img(const void *img_src, uint8_t pos_x, uint8_t pos_y)
 
 void temperature_img(const void *img_src, uint8_t pos_x, uint8_t pos_y)
 {
-
     char str[100] = {0};
     lv_obj_t *src = lv_scr_act();
 
@@ -248,12 +246,13 @@ void logo_img(const void *img_src, uint8_t pos_x, uint8_t pos_y)
     lv_img_set_src(img1, img_src);
     lv_obj_set_pos(img1, pos_x, pos_y);
 }
+
+lv_obj_t *whethercity_label;
+lv_obj_t *whether_label;
+lv_obj_t *airquality_label;
+
 void whether_message(void)
 {
-    lv_obj_t *whethercity_label;
-    lv_obj_t *whether_label;
-    lv_obj_t *airquality_label;
-
     lv_obj_t *src = lv_scr_act();
 
     static lv_style_t font_style;
@@ -263,7 +262,7 @@ void whether_message(void)
 
     whethercity_label = lv_label_create(src, NULL);
     lv_obj_add_style(whethercity_label, LV_LABEL_PART_MAIN, &font_style);
-    lv_label_set_text(whethercity_label, "北京");
+    lv_label_set_text(whethercity_label, "上海");
     lv_obj_set_pos(whethercity_label, 15, 10);
 
     airquality_label = lv_label_create(src, NULL);
@@ -281,10 +280,18 @@ void whether_message(void)
     lv_label_set_text(whether_label, "西南风2级");
     lv_obj_set_pos(whether_label, 15, 50);
 }
+
+void whether_message_update(char *city)
+{
+    lv_label_set_text(whethercity_label, city);
+    lv_obj_set_pos(whethercity_label, 15, 10);
+}
+
 void Temper_Task_Function(lv_task_t *task)
 {
     //你的代码
-    update_time_date(s_date_time.timeinfo_t.tm_hour, s_date_time.timeinfo_t.tm_min, s_date_time.timeinfo_t.tm_sec, s_date_time.timeinfo_t.tm_mon, s_date_time.timeinfo_t.tm_mday, s_date_time.timeinfo_t.tm_wday);
+    time_date_update(s_date_time.timeinfo_t.tm_hour, s_date_time.timeinfo_t.tm_min, s_date_time.timeinfo_t.tm_sec, s_date_time.timeinfo_t.tm_mon, s_date_time.timeinfo_t.tm_mday, s_date_time.timeinfo_t.tm_wday);
+    whether_message_update(results[0].location.name);
 }
 
 void lv_task_init()
