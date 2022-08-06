@@ -8,4 +8,6 @@ LV_IMG_DECLARE(humidity);
 LV_IMG_DECLARE(dabai);
 LV_IMG_DECLARE(cloudy);
 LV_IMG_DECLARE(duoyun);
+LV_IMG_DECLARE(qing);
+
 #endif

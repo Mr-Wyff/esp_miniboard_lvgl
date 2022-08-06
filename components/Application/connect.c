@@ -296,8 +296,8 @@ static esp_netif_t *wifi_start(void)
     ESP_ERROR_CHECK(esp_wifi_set_storage(WIFI_STORAGE_RAM));
     wifi_config_t wifi_config = {
         .sta = {
-            .ssid = "Xiaomi_801",
-            .password = "wyf18810936158",
+            .ssid = "HUAWEI-004C6U",
+            .password = "hrc92602",
             //.scan_method = EXAMPLE_WIFI_SCAN_METHOD,
             //.sort_method = EXAMPLE_WIFI_CONNECT_AP_SORT_METHOD,
             //.threshold.rssi = CONFIG_EXAMPLE_WIFI_SCAN_RSSI_THRESHOLD,

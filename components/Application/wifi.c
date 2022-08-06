@@ -13,8 +13,8 @@
    If you'd rather not, just change the below entries to strings with
    the config you want - ie #define EXAMPLE_WIFI_SSID "mywifissid"
 */
-#define EXAMPLE_ESP_WIFI_SSID      "Xiaomi_801"
-#define EXAMPLE_ESP_WIFI_PASS      "wyf18810936158"
+#define EXAMPLE_ESP_WIFI_SSID      "HUAWEI-004C6U"
+#define EXAMPLE_ESP_WIFI_PASS      "hrc92602"
 #define EXAMPLE_ESP_MAXIMUM_RETRY  5
 
 /* FreeRTOS event group to signal when we are connected*/

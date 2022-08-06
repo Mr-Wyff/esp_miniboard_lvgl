@@ -161,10 +161,20 @@ void time_date_update(int hour, int min, int sec, int mon, int monday, int weekd
     lv_obj_set_pos(week_label, 10 + str_len * 10, datelabel_y);
 }
 
-void whether_img(const void *img_src, uint8_t pos_x, uint8_t pos_y)
+void whether_img(char *whether, uint8_t pos_x, uint8_t pos_y)
 {
     lv_obj_t *img1 = lv_img_create(lv_scr_act(), NULL);
-    lv_img_set_src(img1, img_src);
+
+    if (0 == memcmp(whether, "晴天",strlen(whether)))
+    {
+        lv_img_set_src(img1, &qing);
+    }
+    else if (0 == memcmp(whether, "多云",strlen(whether)))
+    {
+        lv_img_set_src(img1, &duoyun);
+    }
+    // lv_img_set_src(img1, &duoyun);
+
     lv_obj_set_pos(img1, pos_x, pos_y);
 }
 lv_obj_t *temperature_label;
@@ -331,7 +341,7 @@ void lvgl_gui_sample()
     Home_Page_Create();
     //默认显示，随便什么都可以
     time_label_disp(11, 53, 40, ":");
-    whether_img(&duoyun, 150, 5);
+    whether_img(results[0].now.text, 150, 5);
     temperature_img(&temperature, 10, 155);
     humidity_img(&humidity, 15, 190);
     logo_img(&dabai, 160, 130);
